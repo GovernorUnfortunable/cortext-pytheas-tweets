@@ -6,6 +6,7 @@ from flask import render_template
 from flask import request
 from flask import send_file
 from flask import Response
+from flask import jsonify
 from flask_bootstrap import Bootstrap
 from twitterscraper import query_tweets
 
@@ -25,14 +26,16 @@ def hello():
 
 @app.route("/processing", methods=['POST', 'GET'])
 def processing():
-
+	# type of query
 	hashtag = str(request.form.get('hashtag'))
 	account = str(request.form.get('account'))
 	query = str(request.form.get('query'))
+	# select query by
+	infinite = request.form.get('infinite')
 	size = int(request.form.get('size'))
-	date_start = request.form.get('date_start')
-	date_end = request.form.get('date_end')
-
+	date = request.form.get('date')
+	
+	# prepare query
 	if query:
 		query = query
 	elif hashtag:
@@ -44,29 +47,56 @@ def processing():
 	output_file = str(query.replace(" ","_"))
 	bucket_data = []
 
-	for tweet in query_tweets(query, size):
-		bucket_data.append(vars(tweet))
+	# if date
+	if date == 'enabled':
+		date_start = request.form.get('date_start')
+		date_end = request.form.get('date_end')
 		
+		print(date_start)
+		print(date_end)
+
+		query = query + '%20since%3A' + date_start + '%20until%3A' + date_end
+
+	# infinite scrolling or sized buckets
+	if infinite == 'enabled':
+		for tweet in query_tweets(query):
+			bucket_data.append(vars(tweet))
+	else:
+		for tweet in query_tweets(query, size):
+			bucket_data.append(vars(tweet))
+
+	# package everything
 	info = {
 		"QUERY" : query,
 		"SIZE" : size,
 		"TWEETS" : bucket_data
-	}
+	}	
 
-	keys = bucket_data[0].keys()
+	# choose between CSV or JSON
+	datatype = request.form.get('datatype')
+	
+	if datatype == 'json':
+		return jsonify(info)
 
-	output = io.StringIO()
-	dict_writer = csv.DictWriter(output, keys)
-	dict_writer.writeheader()
-	dict_writer.writerows(bucket_data)
+	elif datatype == 'csv':
+		keys = bucket_data[0].keys()
+		output = io.StringIO()
 
-	csvdata = output.getvalue()
+		dict_writer = csv.DictWriter(output, keys)
+		dict_writer.writeheader()
+		dict_writer.writerows(bucket_data)
+		csvdata = output.getvalue()
+		return Response(
+			csvdata,
+			mimetype="text/csv",
+			headers={"Content-disposition":
+					 "attachment; filename="+query+".csv"})
+	
+	else:
+		return render_template('home.html')
+	# request.form.get('date_end')
 
-	return Response(
-		csvdata,
-		mimetype="text/csv",
-		headers={"Content-disposition":
-				 "attachment; filename="+query+".csv"})
+	
 
 
 ##########################################################################

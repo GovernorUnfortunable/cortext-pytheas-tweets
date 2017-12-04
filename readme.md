@@ -2,10 +2,9 @@
 
 ## based on twitterscrap, flask
 
-## next to do : dockerize it, adding datetime filtering...
+## next to do : processing db 
 
 ### how to use ? 
 
-##
-
-##
+## with virtualenv and python 
+## with docker up and run
