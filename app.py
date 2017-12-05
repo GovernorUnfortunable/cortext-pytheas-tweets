@@ -65,7 +65,7 @@ def processing():
 		for tweet in query_tweets(query, size):
 			bucket_data.append(vars(tweet))
 
-	# package everything
+	# package everything 
 	info = {
 		"QUERY" : query,
 		"SIZE" : size,
