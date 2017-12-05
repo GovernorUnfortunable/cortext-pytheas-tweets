@@ -30,6 +30,7 @@ def processing():
 	hashtag = str(request.form.get('hashtag'))
 	account = str(request.form.get('account'))
 	query = str(request.form.get('query'))
+	
 	# select query by
 	infinite = request.form.get('infinite')
 	size = int(request.form.get('size'))
@@ -95,8 +96,6 @@ def processing():
 	else:
 		return render_template('home.html')
 	# request.form.get('date_end')
-
-	
 
 
 ##########################################################################
