@@ -14,15 +14,10 @@ Simple web interface to download tweets without the use of API (only historical 
 
 1. first git clone this repo
 ``` 
-git clone https://github.com/cortext/simple-tweet-web-extract.git
+git clone --recursive https://github.com/cortext/simple-tweet-web-extract.git
 ```
 
-2. inside this cloned repo git clone modified twitterscrape
-```
-git clone https://github.com/ikario404/twitterscraper.git 
-```
-
-3. run docker
+2. run docker
 ```
 docker build -t cortext/cortext_pytheas . && docker-compose up 
 ```
