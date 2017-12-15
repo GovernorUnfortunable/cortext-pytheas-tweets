@@ -8,6 +8,7 @@ Simple web interface to download tweets without the use of API (only historical 
 ## next to do : 
 * processing db 
 * enhance method from docker
+* parse more filters
 
 ## how to use ? 
 ### with docker and docker-compose
