@@ -2,10 +2,9 @@ version: '2'
 services:
   web:
     container_name: cortext_pytheas_tweets
-    image: cortext/cortext_pytheas_tweets
+    build: .
     ports:
      - '5001:8080'
     volumes:
-     - './:/opt/pytheas_tweets'
      - './conf:/opt/pytheas_tweets/conf'
     restart: always 
