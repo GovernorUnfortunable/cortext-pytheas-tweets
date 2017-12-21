@@ -1,3 +1,4 @@
+import json
 import os
 import csv
 import io
@@ -109,5 +110,5 @@ if __name__ == '__main__':
 	app.secret_key = os.urandom(24)
 	app.jinja_env.auto_reload = True
 	app.config['TEMPLATES_AUTO_RELOAD']=True
-	app.run(debug=app.conf['DEBUG_LEVEL'], host='0.0.0.0', port=app.conf['PORT'], threaded=True)
+	app.run(debug=app.config['DEBUG_LEVEL'], host='0.0.0.0', port=app.config['PORT'], threaded=True)
 
