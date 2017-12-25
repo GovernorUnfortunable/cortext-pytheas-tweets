@@ -1,6 +1,4 @@
 {
-  "VENDOR":"",
-  "VENDOR_AUTH":"",
   "PORT":8080,
   "redirect_uri": "",
   "grant_host_url": "",
