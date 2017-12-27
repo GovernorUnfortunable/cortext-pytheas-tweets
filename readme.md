@@ -12,12 +12,15 @@ Simple web interface to download tweets without the use of API (only historical 
 * documentation
 * parse more filters
 
-## how to use ? 
+## how to use ?
+
+* create ***docker-compose.yaml*** && ***conf/conf.json*** (with credentials) from example files
+
 ### with docker and docker-compose
 
 1. first git clone this repo
 ``` 
-git clone --recursive https://github.com/cortext/simple-tweet-web-extract.git
+git clone --recursive https://github.com/cortext/cortext-pytheas-tweets.git
 ```
 
 2. run docker
