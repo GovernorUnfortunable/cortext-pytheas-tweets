@@ -1,111 +1,92 @@
-{% extends "base.html" %} 
-
-
+{% extends "base.html" %}
 {% block page_name %}Index{% endblock %}
-
-
 {% block content %}
-
-
-<div class="container">
-    
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h1>Simple Tweets extractor</h1>
+    <div class="container">
+        
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>Simple Tweets extractor</h1>
+            </div>
         </div>
-    </div>
-    
-
-    <div class="row">
-        <div class="col-md-offset-2 col-md-8">
-            <hr/>
+        
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <hr/>
+            </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-offset-2 col-md-8 ">
-            <form id="twt_form" method="POST" action="/processing" class="form-horizontal">
-
-                <div class="form-group">
-                    <label class="col-xs-3 control-label">Hashtag #</label>
-
-                    <div class="col-xs-6">
-                        <input type="text" class="form-control" name="hashtag" placeholder="hackLab" />
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label class="col-xs-3 control-label">Account @</label>
-                    
-                    <div class="col-xs-6">
-                        <input type="text" class="form-control" name="account" placeholder="ikario404" />
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label class="col-xs-3 control-label">Complex query </label>
-                    
-                    <div class="col-xs-6">
-                        <input type="text" class="form-control" name="query" placeholder="openLab OR hacklab" />
-                    </div>
-                </div>
-
-                <hr>
-
-                <div class="form-group">
-                    <label class="col-xs-3 control-label">Size results</label>
-                  
-                    <div class="col-xs-6">
-                        <input type="number" class="form-control" name="size" step="20" value="20">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <small class="col-xs-3 control-label">Or enable infinite scrolling <br> (may not work properly)</small>
-                  
-                    <div class="col-xs-6">
-                         <input type="checkbox" name="infinite" value="enabled">
-                    </div>
-                </div>
-
-                <hr>
-
-                <div class="form-group">
-                    <label class="col-xs-2 control-label">Date</label>
-
-                    <div class="col-xs-1">
-                        <label class="center-block checkbox-inline">
-                            <input type="checkbox" name="date" value="enabled">
-                        </label>
-                    </div>
-
-                    <div class="col-xs-6 date">
-                        <div class="input-group input-append date" id="datePicker">
-                            <input type="date" class="form-control" name="date_start" value="2017-11-28" />
-                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
-                            <input type="date" class="form-control" name="date_end" value="2017-12-02" />
-                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8 ">
+                <form id="twt_form" method="POST" action="/processing" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Hashtag #</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" name="hashtag" placeholder="hackLab" />
                         </div>
                     </div>
-                </div>
-
-                <hr>
-
-            </form>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Account @</label>
+                        
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" name="account" placeholder="ikario404" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Complex query </label>
+                        
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" name="query" placeholder="openLab OR hacklab" />
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">Size results</label>
+                        
+                        <div class="col-xs-6">
+                            <input type="number" class="form-control" name="size" step="20" value="20">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <small class="col-xs-3 control-label">Or enable infinite scrolling <br> (may not work properly)</small>
+                        
+                        <div class="col-xs-6">
+                            <input type="checkbox" name="infinite" value="enabled">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">Date</label>
+                        <div class="col-xs-1">
+                            <label class="center-block checkbox-inline">
+                                <input type="checkbox" name="date" value="enabled">
+                            </label>
+                        </div>
+                        <div class="col-xs-6 date">
+                            <div class="input-group input-append date" id="datePicker">
+                                <input type="date" class="form-control" name="date_start" value="2017-11-28" />
+                                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                <input type="date" class="form-control" name="date_end" value="2017-12-02" />
+                                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-3 col-md-3">
+                <button type="submit" form="twt_form" name="datatype" value="json" class="center-block btn btn-default">Download JSON</button>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" form="twt_form" name="datatype" value="csv" class=" center-block btn btn-default">Download CSV</button>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-offset-3 col-md-3">
-            <button type="submit" form="twt_form" name="datatype" value="json" class="center-block btn btn-default">Download JSON</button>
-        </div>
-        <div class="col-md-3">
-            <button type="submit" form="twt_form" name="datatype" value="csv" class=" center-block btn btn-default">Download CSV</button>
-        </div>
-    </div>
 
-</div>
+    {% block footer %}
+        {{super()}}
+    {% endblock footer %}
+
 
 {% endblock %}

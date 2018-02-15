@@ -9,6 +9,7 @@ from flask import send_file
 from flask import Response
 from flask import jsonify
 from flask_bootstrap import Bootstrap
+
 from twitterscraper import query_tweets
 
 def create_app():

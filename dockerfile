@@ -17,14 +17,13 @@ WORKDIR /opt/pytheas
 RUN pip install -r requirements.txt
 
 # install modified twitterscrape package
-COPY ./twitterscraper /opt/pytheas/twitterscraper
-RUN cd ./twitterscraper/ && python setup.py install
+RUN cd twitterscraper/ && python setup.py install
 
 # prepare port
 EXPOSE 5000
 
 # Define working volumes
-VOLUME ["/opt/pytheas-tweets", "/opt/pytheas-tweets/conf"]
+VOLUME ["/opt/pytheas", "/opt/pytheas/conf"]
 
 #lauch app
 CMD python app.py
