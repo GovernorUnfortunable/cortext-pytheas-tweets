@@ -2,15 +2,21 @@ import json
 import os
 import csv
 import io
+import requests
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import session
 from flask import send_file
 from flask import Response
 from flask import jsonify
+from flask import redirect
+from flask import url_for
+from uuid import uuid4
 from flask_bootstrap import Bootstrap
 from twitterscraper import query_tweets
 
+## package app
 def create_app():
 	app = Flask(__name__)
 	Bootstrap(app)
@@ -25,8 +31,27 @@ try:
 except BaseException as error:
 	print('An exception occurred : {}'.format(error))
 
+## before rendering app
+@app.before_request
+def before_request():
+    try:
+        # session['api_key'] = app.config['api_key']
+        if 'access_token' not in session and request.endpoint != 'login':
+            if 'auth' in request.endpoint:
+                return auth()
+            elif 'grant' in request.endpoint:
+                return grant()            
+            return redirect(url_for('login'))
+    except BaseException as e:
+        print(e)
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error.html', error=error)
+
+## starting rendering app.html
 @app.route("/")
-def hello():
+def home():
 	print("hello")
 	return render_template('home.html')
 
@@ -101,6 +126,62 @@ def processing():
 	else:
 		return render_template('home.html')
 
+##########################################################################
+# OAuth
+##########################################################################
+@app.route('/login')
+def login():   
+    return render_template('login.html')
+
+@app.route('/grant', methods=['GET'])
+def grant():
+    with open('conf/conf.json') as conf_file:
+        conf_data = json.load(conf_file)
+        grant_host_url = conf_data['grant_host_url']
+        redirect_uri_conf = conf_data['redirect_uri']
+
+    grant_url = grant_host_url + "/auth/authorize" + \
+                "?response_type=code" + \
+                "&state=" + str(uuid4().hex) + \
+                "&client_id=pytheas" + \
+                "&redirect_uri=" + redirect_uri_conf
+
+    headers = {
+        'Location': grant_url
+    }
+
+    return Response(grant_url, status=302, headers=headers)
+
+@app.route('/auth', methods=['GET'])
+def auth():
+    code = str(request.args['code']) 
+    state = str(request.args['state']) 
+
+    with open('conf/conf.json') as conf_file:
+        conf_data = json.load(conf_file)
+        redirect_uri_conf = conf_data['redirect_uri']
+        grant_host_url = conf_data['grant_host_url']
+
+    payload = {
+      'code': code,
+      'state': state,
+      'client_id': 'pytheas',
+      'client_secret': 'mys3cr3t',
+      'redirect_uri': redirect_uri_conf,
+      'grant_type': 'authorization_code'
+    }
+
+    r_grant = requests.post(grant_host_url + '/auth/grant', data=payload)
+    data = r_grant.json()
+    print()
+    print(data)
+    print()
+    r_access = requests.get(grant_host_url + '/auth/access?access_token=' + str(data['access_token']))
+    
+    session['access_token'] = data['access_token']
+    session['profil'] = r_access.json()
+
+    return redirect(url_for('home'))
 
 ##########################################################################
 # Start
@@ -110,4 +191,3 @@ if __name__ == '__main__':
 	app.jinja_env.auto_reload = True
 	app.config['TEMPLATES_AUTO_RELOAD']=True
 	app.run(debug=True, host='0.0.0.0', port=8080, threaded=True)
-
