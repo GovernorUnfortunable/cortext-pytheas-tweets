@@ -3,6 +3,7 @@ import os
 import csv
 import io
 import requests
+import datetime as dt
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -15,6 +16,7 @@ from flask import url_for
 from uuid import uuid4
 from flask_bootstrap import Bootstrap
 from twitterscraper import query_tweets
+from code_country import language_code
 
 ## package app
 def create_app():
@@ -52,8 +54,7 @@ def page_not_found(error):
 ## starting rendering app.html
 @app.route("/")
 def home():
-	print("hello")
-	return render_template('home.html')
+	return render_template('home.html', language_code=language_code)
 
 @app.route("/processing", methods=['POST', 'GET'])
 def processing():
@@ -66,7 +67,8 @@ def processing():
 	infinite = request.form.get('infinite')
 	size = int(request.form.get('size'))
 	date = request.form.get('date')
-	
+	language = request.form.get('language_control')
+
 	# prepare query
 	if query:
 		query = query
@@ -81,17 +83,31 @@ def processing():
 
 	# if date
 	if date == 'enabled':
-		date_start = request.form.get('date_start')
-		date_end = request.form.get('date_end')
-		query = query + '%20since%3A' + date_start + '%20until%3A' + date_end
-
-	# infinite scrolling or sized buckets
-	if infinite == 'enabled':
-		for tweet in query_tweets(query):
-			bucket_data.append(vars(tweet))
+		date_start = dt.datetime(request.form.get('date_start'))
+		date_end = dt.datetime(request.form.get('date_end'))
+		#query = query + '%20since%3A' + date_start + '%20until%3A' + date_end
+		if infinite == 'enabled':
+			for tweet in query_tweets(query, begindate=date_start, enddate=date_end, lang=str(language)):
+				bucket_data.append(vars(tweet))
+		else:
+			for tweet in query_tweets(query, limit=size, begindate=date_start, enddate=date_end, lang=str(language)):
+				bucket_data.append(vars(tweet))
 	else:
-		for tweet in query_tweets(query, size):
-			bucket_data.append(vars(tweet))
+		if infinite == 'enabled':
+			for tweet in query_tweets(query, lang=str(language)):
+				bucket_data.append(vars(tweet))
+		else:
+			for tweet in query_tweets(query, limit=size, lang=str(language)):
+				bucket_data.append(vars(tweet))
+
+	#begindate=date_start, enddate=date_end
+	# infinite scrolling or sized buckets
+	# if infinite == 'enabled':
+	# 	for tweet in query_tweets(query, limit=None, lang=str(language)):
+	# 		bucket_data.append(vars(tweet))
+	# else:
+	# 	for tweet in query_tweets(query, limit=size, lang=str(language)):
+	# 		bucket_data.append(vars(tweet))
 
 	#special for date as cortext readable date
 	for tweet in bucket_data:
@@ -190,4 +206,4 @@ if __name__ == '__main__':
 	app.secret_key = os.urandom(24)
 	app.jinja_env.auto_reload = True
 	app.config['TEMPLATES_AUTO_RELOAD']=True
-	app.run(debug=True, host='0.0.0.0', port=8080, threaded=True)
+	app.run(debug=app.config['DEBUG_LEVEL'], host='0.0.0.0', port=app.config['PORT'], threaded=True)

@@ -10,7 +10,7 @@
 
 {%- extends "bootstrap/base.html" %}
 
-{% block title %}Simple Tweets extractor{% endblock %}
+{% block title %}Pytheas tweets{% endblock %}
 {% import "bootstrap/fixes.html" as fixes %}
 {% set title = self.title() %}
 {% set github_cred = 'https://github.com/cortext/cortext-pytheas-tweets' %}
@@ -19,6 +19,7 @@
 {% block head %}
   {{super()}}
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://abs.twimg.com/favicons/favicon.ico" rel="shortcut icon" type="image/x-icon">
   {{fixes.ie8()}}
 {% endblock %}
 

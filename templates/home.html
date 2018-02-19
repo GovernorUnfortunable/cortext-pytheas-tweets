@@ -5,7 +5,7 @@
         
         <div class="row">
             <div class="col-md-12 text-center">
-                <h1>Simple Tweets extractor</h1>
+                <h1>{{ title }}</h1>
             </div>
         </div>
         
@@ -39,6 +39,20 @@
                     </div>
                     <hr>
                     <div class="form-group">
+                        <label class="col-xs-3 control-label">Language domain :</label>
+    
+                        <div class="col-xs-6">
+                            <select class="form-control" name="language_control" placeholder="fr">
+                              <option value="" disabled selected>Select your language area</option>
+                              {% for lang in language_code %}
+                                <option value="{{ lang[0] }}">{{ lang[1] }}</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+                        <small>**Default language should be english (</small>
+                    </div>
+                    <hr>
+                    <div class="form-group">
                         <label class="col-xs-3 control-label">Size results</label>
                         
                         <div class="col-xs-6">
@@ -46,12 +60,15 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <small class="col-xs-3 control-label">Or enable infinite scrolling <br> (may not work properly)</small>
+                        <em class="col-xs-3 control-label">Or enable infinite scrolling</em>
                         
                         <div class="col-xs-6">
                             <input type="checkbox" name="infinite" value="enabled">
                         </div>
+
                     </div>
+
+                    <small>**For now due to an upgrade version, pretention to exhaustivity (get all tweets) should be used with a large dated query</small>
                     <hr>
                     <div class="form-group">
                         <label class="col-xs-2 control-label">Date</label>
@@ -69,6 +86,7 @@
                             </div>
                         </div>
                     </div>
+                    <small>**Theorically checking date will ignore size results </small>
                     <hr>
                 </form>
             </div>
