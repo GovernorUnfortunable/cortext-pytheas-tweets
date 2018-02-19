@@ -83,9 +83,21 @@ def processing():
 
 	# if date
 	if date == 'enabled':
-		date_start = dt.datetime(request.form.get('date_start'))
-		date_end = dt.datetime(request.form.get('date_end'))
+		# print(request.form.get('date_start'))
+		# print(dt.datetime.strptime(request.form.get('date_end'),"%Y-%m-%d").timestamp())
+
+		# date_start = dt.datetime.strptime(request.form.get('date_start'),"%Y-%m-%d")
+		# date_end = dt.datetime.strptime(request.form.get('date_end'),"%Y-%m-%d")
+
+		entry_date_start = request.form.get('date_start')
+		date_start = (dt.datetime.strptime(entry_date_start, '%Y-%m-%d')).date()
+
+		entry_date_end = request.form.get('date_end')
+		date_end = (dt.datetime.strptime(entry_date_end, '%Y-%m-%d')).date()
+
 		#query = query + '%20since%3A' + date_start + '%20until%3A' + date_end
+		print(date_start)
+		print(date_end)
 		if infinite == 'enabled':
 			for tweet in query_tweets(query, begindate=date_start, enddate=date_end, lang=str(language)):
 				bucket_data.append(vars(tweet))
